@@ -57,7 +57,6 @@ public class JLine3Input implements TerminalInput {
 
         map.bind(new KeyStroke(KeyType.ESCAPE),    "\033");
 
-        // All remaining letters and digits
         for (char c = '0'; c <= 'z'; c++) {
             if (Character.isLetterOrDigit(c)) {
                 map.bind(new KeyStroke(c), String.valueOf(c));
