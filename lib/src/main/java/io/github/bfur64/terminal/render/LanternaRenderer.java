@@ -64,8 +64,8 @@ public class LanternaRenderer implements TerminalRenderer {
     public void resetColorAndStyle() {
         try {
             // Fallback
-            System.out.print("\u001b[0m");
-            
+            System.out.print("\033[0;39;49m");
+
             terminal.resetColorAndSGR();
             flush();
         }
