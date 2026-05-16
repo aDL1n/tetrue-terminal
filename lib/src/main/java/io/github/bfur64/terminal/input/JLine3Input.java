@@ -72,17 +72,15 @@ public class JLine3Input implements TerminalInput {
         map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033OC");
         map.bind(new KeyStroke(KeyType.ARROW_LEFT),  "\033OD");
 
-        map.bind(new KeyStroke(KeyType.BACKSPACE), "\b");     // BS (8)
+        map.bind(new KeyStroke(KeyType.BACKSPACE), "\b"); // BS (8)
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\177"); // DEL
 
         map.bind(new KeyStroke(KeyType.ENTER),     "\r");
 
         map.bind(new KeyStroke(KeyType.ESCAPE),    "\033");
 
-        for (char c = '0'; c <= 'z'; c++) {
-            if (Character.isLetterOrDigit(c)) {
-                map.bind(new KeyStroke(c), String.valueOf(c));
-            }
+        for (int c = 32; c < 127; c++) {
+            map.bind(new KeyStroke((char) c), String.valueOf((char) c));
         }
 
         map.setAmbiguousTimeout(10);
