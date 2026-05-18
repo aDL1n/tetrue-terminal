@@ -24,4 +24,24 @@ public class KeyStroke {
     public Character getCharacter() {
         return character;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if(!(obj instanceof KeyStroke other)) return false;
+        if (this.keyType != other.keyType) return false;
+        if (this.keyType == KeyType.CHARACTER) {
+            return this.character == other.character;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (keyType == KeyType.CHARACTER) {
+            return String.valueOf(character);
+        }
+
+        return keyType.toString();
+    }
 }
