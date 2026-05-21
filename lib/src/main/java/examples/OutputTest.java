@@ -1,16 +1,17 @@
 package examples;
 
-import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.BufferedTerminal;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 public class OutputTest {
     public static void main(String[] args) throws Exception {
-        try (Terminal terminal = Terminal.auto()) {
+        try (TerminalBackend terminal = BufferedTerminal.auto()) {
             terminal.start();
             runTerminalDebugTest(terminal);
         }
     }
 
-    public static void runTerminalDebugTest(Terminal renderer) throws InterruptedException {
+    public static void runTerminalDebugTest(TerminalBackend renderer) throws InterruptedException {
         // 1. Query terminal size (tests getXSize / getYSize)
         int w = renderer.getXSize();
         int h = renderer.getYSize();

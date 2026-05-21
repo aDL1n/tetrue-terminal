@@ -20,19 +20,11 @@ public class Terminal implements TerminalBackend {
 
     public static Terminal auto() throws IOException {
         if (isTermux()) {
-            return lanterna();
+
         }
         else {
             return jline3();
         }
-    }
-
-    public static Terminal lanterna() throws IOException {
-        return new Terminal(new LanternaBackend());
-    }
-
-    public static Terminal jline3() throws IOException {
-        return new Terminal(new JLine3Backend());
     }
 
     private static boolean isTermux() {
