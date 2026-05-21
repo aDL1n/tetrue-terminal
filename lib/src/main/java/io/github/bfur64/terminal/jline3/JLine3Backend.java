@@ -20,7 +20,7 @@ public class JLine3Backend implements TerminalBackend {
             terminal = TerminalBuilder.builder()
                     .system(true)
                     .dumb(false)
-                    .jna(false)
+                    .jna(true)
                     .jansi(false)
                     .jni(false)
                     .ffm(true)
