@@ -17,7 +17,11 @@ public class JLine3Backend implements TerminalBackend {
     public JLine3Backend(boolean isTermux) throws IOException {
         Terminal terminal;
         if (isTermux) {
-             terminal = TerminalBuilder.builder().system(true).dumb(false).build();
+            System.setProperty("org.jline.terminal.provider", "exec");
+            System.setProperty("java.awt.headless", "true");
+            System.setProperty("file.encoding", "UTF-8");
+            
+            terminal = TerminalBuilder.builder().system(true).dumb(false).build();
         }
         else {
             terminal = TerminalBuilder.builder().system(true).provider("exec").encoding("UTF-8").build();
