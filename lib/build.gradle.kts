@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "2.0.1"
+version = "2.0.2-SNAPSHOT"
 
 val jline3Version = "3.30.13"
 
