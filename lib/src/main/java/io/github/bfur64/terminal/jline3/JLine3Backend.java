@@ -79,7 +79,7 @@ public class JLine3Backend implements TerminalBackend {
 
     @Override
     public String getTerminalInfo() {
-        return "JLine3: " + Config.jline3Version;
+        return "JLine3: " + Config.jlineVersion;
     }
 
     @Override
