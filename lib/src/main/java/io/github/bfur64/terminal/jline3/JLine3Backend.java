@@ -14,21 +14,8 @@ public class JLine3Backend implements TerminalBackend {
     private final JLine3InputHandler jLine3InputHandler;
     private final JLine3RendererHandler jLine3RendererHandler;
 
-    public JLine3Backend(boolean isTermux) throws IOException {
-        Terminal terminal;
-        if (isTermux) {
-            terminal = TerminalBuilder.builder()
-                    .system(true)
-                    .dumb(false)
-                    .jna(true)
-                    .jansi(false)
-                    .jni(false)
-                    .ffm(true)
-                    .build();
-        }
-        else {
-            terminal = TerminalBuilder.builder().system(true).dumb(false).build();
-        }
+    public JLine3Backend() throws IOException {
+        Terminal terminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
         jLine3InputHandler = new JLine3InputHandler(terminal);
         jLine3RendererHandler = new JLine3RendererHandler(terminal, terminal.writer());
