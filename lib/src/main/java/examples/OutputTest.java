@@ -1,11 +1,11 @@
 package examples;
 
-import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.BufferedTerminal;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 public class OutputTest {
     public static void main(String[] args) throws Exception {
-        try (TerminalBackend terminal = Terminal.auto()) {
+        try (TerminalBackend terminal = BufferedTerminal.auto()) {
             terminal.start();
             runTerminalDebugTest(terminal);
         }
