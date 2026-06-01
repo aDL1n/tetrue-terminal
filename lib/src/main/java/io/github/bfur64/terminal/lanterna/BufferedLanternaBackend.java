@@ -54,32 +54,32 @@ public class BufferedLanternaBackend implements TerminalBackend {
 
     @Override
     public void clearScreen() {
-        lanternaRendererHandler.clearScreen();
+        bufferedRenderer.clearScreen();
     }
 
     @Override
     public void put(int x, int y, String out) {
-        lanternaRendererHandler.put(x, y, out);
+        bufferedRenderer.put(x, y, out);
     }
 
     @Override
     public void flush() {
-        lanternaRendererHandler.flush();
+        bufferedRenderer.flush();
     }
 
     @Override
     public void setForegroundColor(int r, int g, int b) {
-        lanternaRendererHandler.setForegroundColor(r, g, b);
+        bufferedRenderer.setForegroundColor(r, g, b);
     }
 
     @Override
     public void setBackgroundColor(int r, int g, int b) {
-        lanternaRendererHandler.setBackgroundColor(r, g, b);
+        bufferedRenderer.setBackgroundColor(r, g, b);
     }
 
     @Override
     public void resetColorAndStyle() {
-        lanternaRendererHandler.resetColorAndStyle();
+        bufferedRenderer.resetColorAndStyle();
     }
 
     @Override
@@ -100,6 +100,9 @@ public class BufferedLanternaBackend implements TerminalBackend {
     @Override
     public void close() throws IOException {
         lanternaInputHandler.close();
+        if (bufferedResizePoller != null) {
+            bufferedResizePoller.close();
+        }
         lanternaRendererHandler.close();
     }
 }
