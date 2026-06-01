@@ -127,12 +127,6 @@ public class BufferedRenderer implements TextGraphics {
             }
         }
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                nextBuffer[y][x].reset();
-            }
-        }
-
         renderer.resetColorAndStyle();
     }
 
