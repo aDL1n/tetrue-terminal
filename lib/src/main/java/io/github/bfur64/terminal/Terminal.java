@@ -4,11 +4,12 @@ import io.github.bfur64.terminal.jline.JLineBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.lanterna.LanternaBackend;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
+@NullMarked
 public class Terminal implements TerminalBackend {
     private final TerminalBackend terminalBackend;
     private boolean started;
@@ -36,7 +37,7 @@ public class Terminal implements TerminalBackend {
     }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         return terminalBackend.readInput();
     }
 

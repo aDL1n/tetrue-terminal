@@ -6,7 +6,7 @@ import io.github.bfur64.terminal.input.KeyType;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOError;
@@ -15,6 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@NullMarked
 class JlineInputHandler implements InputHandler {
     private final BindingReader bindingReader;
     private final KeyMap<KeyStroke> keyMap;
@@ -22,7 +23,7 @@ class JlineInputHandler implements InputHandler {
     private final BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
 
-    private Thread pollingThread;
+    private @Nullable Thread pollingThread;
 
     public JlineInputHandler(Terminal terminal) {
         this.bindingReader = new BindingReader(terminal.reader());
@@ -49,7 +50,7 @@ class JlineInputHandler implements InputHandler {
     }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         try {
             return inputQueue.take();
         } catch (InterruptedException e) {
@@ -106,8 +107,10 @@ class JlineInputHandler implements InputHandler {
         try {
             isRunning.set(false);
 
-            pollingThread.interrupt();
-            pollingThread.join();
+            if (pollingThread != null) {
+                pollingThread.interrupt();
+                pollingThread.join();
+            }
         }
         catch (InterruptedException e) {
             throw new RuntimeException(e);

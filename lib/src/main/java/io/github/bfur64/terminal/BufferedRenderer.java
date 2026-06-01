@@ -1,7 +1,9 @@
 package io.github.bfur64.terminal;
 
 import io.github.bfur64.terminal.interfaces.TextGraphics;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BufferedRenderer implements TextGraphics {
     private final TextGraphics renderer;
 
@@ -16,10 +18,10 @@ public class BufferedRenderer implements TextGraphics {
 
     private boolean fullRedraw;
 
-    public BufferedRenderer(TextGraphics renderer, int width, int height) {
+    public BufferedRenderer(TextGraphics renderer) {
         this.renderer = renderer;
-        this.width = width;
-        this.height = height;
+        this.width = 0;
+        this.height = 0;
 
         allocateBuffers();
     }
@@ -59,7 +61,7 @@ public class BufferedRenderer implements TextGraphics {
     @Override
     public void put(int x, int y, String out) {
         if (x < 0 || x >= width || y < 0 || y >= height) return;
-        if (out == null || out.isEmpty()) return;
+        if (out.isEmpty()) return;
 
         for (int i = 0; i < out.length(); i++) {
             if (x + (i + 1) > width) break;

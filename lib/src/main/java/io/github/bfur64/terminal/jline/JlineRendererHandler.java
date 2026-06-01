@@ -4,10 +4,12 @@ import io.github.bfur64.terminal.interfaces.RendererHandler;
 import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;
+import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@NullMarked
 class JlineRendererHandler implements RendererHandler {
     private final Terminal terminal;
     private final PrintWriter printWriter;

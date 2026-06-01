@@ -5,11 +5,12 @@ import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
+@NullMarked
 public class JLineBackend implements TerminalBackend {
     private final JlineInputHandler jlineInputHandler;
     private final JlineRendererHandler jlineRendererHandler;
@@ -22,7 +23,7 @@ public class JLineBackend implements TerminalBackend {
     }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         return jlineInputHandler.readInput();
     }
 

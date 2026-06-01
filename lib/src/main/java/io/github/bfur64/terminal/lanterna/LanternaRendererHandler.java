@@ -4,9 +4,11 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.RendererHandler;
+import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
 
+@NullMarked
 class LanternaRendererHandler implements RendererHandler {
     private final Terminal terminal;
     private final TextGraphics textGraphics;

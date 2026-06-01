@@ -1,8 +1,10 @@
 package io.github.bfur64.terminal.input;
 
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-public record KeyStroke(KeyType keyType, Character character) {
+@NullMarked
+public record KeyStroke(KeyType keyType, @Nullable Character character) {
     public KeyStroke(Character character) {
         this(KeyType.CHARACTER, character);
     }
@@ -22,11 +24,11 @@ public record KeyStroke(KeyType keyType, Character character) {
         return true;
     }
 
-    @Override @NonNull
+    @Override
     public String toString() {
         return switch (keyType) {
             case CHARACTER -> {
-                if (character == ' ') {
+                if (character != null && character == ' ') {
                     yield "Space";
                 }
 

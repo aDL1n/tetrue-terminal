@@ -1,5 +1,8 @@
 package io.github.bfur64.terminal.interfaces;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public interface TextGraphics {
     void clearScreen();
     void put(int x, int y, String out);

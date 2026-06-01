@@ -6,7 +6,7 @@ import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -14,21 +14,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@NullMarked
 public class BufferedJLineBackend implements TerminalBackend {
     private final JlineInputHandler jlineInputHandler;
     private final JlineRendererHandler jlineRendererHandler;
-    private BufferedRenderer bufferedRenderer;
-    private ScheduledExecutorService bufferedResizePoller;
+    private final BufferedRenderer bufferedRenderer;
+    private @Nullable ScheduledExecutorService bufferedResizePoller;
 
     public BufferedJLineBackend() throws IOException {
         Terminal terminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
         jlineInputHandler = new JlineInputHandler(terminal);
         jlineRendererHandler = new JlineRendererHandler(terminal, terminal.writer());
+        bufferedRenderer = new BufferedRenderer(jlineRendererHandler);
     }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         return jlineInputHandler.readInput();
     }
 
@@ -41,12 +43,6 @@ public class BufferedJLineBackend implements TerminalBackend {
     public void start() {
         jlineInputHandler.start();
         jlineRendererHandler.start();
-
-        bufferedRenderer = new BufferedRenderer(
-            jlineRendererHandler,
-            jlineRendererHandler.getXSize(),
-            jlineRendererHandler.getYSize()
-        );
 
         bufferedResizePoller = Executors.newSingleThreadScheduledExecutor();
         bufferedResizePoller.scheduleAtFixedRate(() -> {
@@ -104,7 +100,9 @@ public class BufferedJLineBackend implements TerminalBackend {
     @Override
     public void close() throws IOException {
         jlineInputHandler.close();
-        bufferedResizePoller.close();
+        if (bufferedResizePoller != null) {
+            bufferedResizePoller.close();
+        }
         jlineRendererHandler.close();
     }
 }

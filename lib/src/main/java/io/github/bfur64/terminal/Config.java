@@ -1,11 +1,13 @@
 package io.github.bfur64.terminal;
 
+import org.jspecify.annotations.NullMarked;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+@NullMarked
 public class Config {
     public static String tetrueTerminalVersion;
     public static String lanternaVersion;

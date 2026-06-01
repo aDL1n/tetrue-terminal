@@ -4,11 +4,12 @@ import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.InputHandler;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
+@NullMarked
 class LanternaInputHandler implements InputHandler {
     private final Terminal terminal;
 
@@ -17,12 +18,10 @@ class LanternaInputHandler implements InputHandler {
     }
 
     @Override
-    public void start() {
-
-    }
+    public void start() { }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         try {
             com.googlecode.lanterna.input.KeyStroke lanternaKeyStroke = terminal.readInput();
 
@@ -57,7 +56,7 @@ class LanternaInputHandler implements InputHandler {
         }
     }
 
-    private @NonNull KeyType getKeyType(com.googlecode.lanterna.input.KeyStroke keyStroke) {
+    private KeyType getKeyType(com.googlecode.lanterna.input.KeyStroke keyStroke) {
         return switch (keyStroke.getKeyType()) {
             case Escape -> KeyType.ESCAPE;
             case Backspace -> KeyType.BACKSPACE;
@@ -73,7 +72,5 @@ class LanternaInputHandler implements InputHandler {
     }
 
     @Override
-    public void close() {
-
-    }
+    public void close() { }
 }

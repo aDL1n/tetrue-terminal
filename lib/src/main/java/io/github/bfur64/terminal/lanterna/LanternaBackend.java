@@ -5,11 +5,12 @@ import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
+@NullMarked
 public class LanternaBackend implements TerminalBackend {
     private final LanternaInputHandler lanternaInputHandler;
     private final LanternaRendererHandler lanternaRendererHandler;
@@ -21,7 +22,7 @@ public class LanternaBackend implements TerminalBackend {
     }
 
     @Override
-    public @NonNull KeyStroke readInput() {
+    public KeyStroke readInput() {
         return lanternaInputHandler.readInput();
     }
 
