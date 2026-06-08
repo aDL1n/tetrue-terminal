@@ -7,28 +7,22 @@ import org.jspecify.annotations.NullMarked;
 public class BufferedRenderer implements TextGraphics {
     private final TextGraphics renderer;
 
-    private int width;
-    private int height;
-
-    private Cell[][] prevBuffer;
-    private Cell[][] nextBuffer;
+    private volatile Buffer buffer;
 
     private int currFgR = -1, currFgG = -1, currFgB = -1;
     private int currBgR = -1, currBgG = -1, currBgB = -1;
 
-    private boolean fullRedraw;
+    private volatile boolean fullRedraw;
 
     public BufferedRenderer(TextGraphics renderer) {
         this.renderer = renderer;
-        this.width = 0;
-        this.height = 0;
 
-        allocateBuffers();
+        allocateBuffers(0, 0);
     }
 
-    private void allocateBuffers() {
-        prevBuffer = new Cell[height][width];
-        nextBuffer = new Cell[height][width];
+    private void allocateBuffers(int width, int height) {
+        Cell[][] prevBuffer = new Cell[height][width];
+        Cell[][] nextBuffer = new Cell[height][width];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -36,22 +30,23 @@ public class BufferedRenderer implements TextGraphics {
                 nextBuffer[y][x] = new Cell();
             }
         }
+
+        buffer = new Buffer(prevBuffer, nextBuffer, width, height);
     }
 
     public void resize(int newWidth, int newHeight) {
-        if (newWidth == width && newHeight == height) return;
+        Buffer current = buffer;
 
-        width = newWidth;
-        height = newHeight;
+        if (newWidth == current.width && newHeight == current.height) return;
 
-        allocateBuffers();
+        allocateBuffers(newWidth, newHeight);
 
         fullRedraw = true;
     }
 
     @Override
     public void clearScreen() {
-        for (Cell[] row : nextBuffer) {
+        for (Cell[] row : buffer.nextBuffer) {
             for (Cell col : row) {
                 col.reset();
             }
@@ -60,13 +55,15 @@ public class BufferedRenderer implements TextGraphics {
 
     @Override
     public void put(int x, int y, String out) {
-        if (x < 0 || x >= width || y < 0 || y >= height) return;
+        Buffer current = buffer;
+
+        if (x < 0 || x >= current.width || y < 0 || y >= current.height) return;
         if (out.isEmpty()) return;
 
         for (int i = 0; i < out.length(); i++) {
-            if (x + (i + 1) > width) break;
+            if (x + (i + 1) > current.width) break;
 
-            Cell cell = nextBuffer[y][x + i];
+            Cell cell = current.nextBuffer[y][x + i];
 
             cell.ch = out.charAt(i);
             cell.fgR = currFgR; cell.fgG = currFgG; cell.fgB = currFgB;
@@ -76,6 +73,8 @@ public class BufferedRenderer implements TextGraphics {
 
     @Override
     public void flush() {
+        Buffer current = buffer;
+
         if (fullRedraw) {
             renderer.clearScreen();
             fullRedraw = false;
@@ -87,10 +86,10 @@ public class BufferedRenderer implements TextGraphics {
         boolean termBgDefault = true;
         int termBgR = -1, termBgG = -1, termBgB = -1;
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Cell next = nextBuffer[y][x];
-                Cell prev = prevBuffer[y][x];
+        for (int y = 0; y < current.height; y++) {
+            for (int x = 0; x < current.width; x++) {
+                Cell next = current.nextBuffer[y][x];
+                Cell prev = current.prevBuffer[y][x];
 
                 if (!next.equals(prev)) {
                     // --- Foreground ---
@@ -148,14 +147,6 @@ public class BufferedRenderer implements TextGraphics {
         currBgR = currBgG = currBgB = -1;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     private static class Cell {
         char ch = ' ';
         int fgR = -1, fgG = -1, fgB = -1;
@@ -182,4 +173,6 @@ public class BufferedRenderer implements TextGraphics {
         boolean isFgDefault() { return fgR == -1; }
         boolean isBgDefault() { return bgR == -1; }
     }
+
+    private record Buffer(Cell[][] prevBuffer, Cell[][] nextBuffer, int width, int height) {}
 }
