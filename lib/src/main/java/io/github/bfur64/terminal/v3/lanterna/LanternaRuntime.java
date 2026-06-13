@@ -1,25 +1,45 @@
 package io.github.bfur64.terminal.v3.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import io.github.bfur64.terminal.v3.PipelineType;
 import io.github.bfur64.terminal.v3.Terminal;
+import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
 import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
 import io.github.bfur64.terminal.v3.pipeline.Pipeline;
 import org.jspecify.annotations.NullMarked;
 
+import java.io.IOException;
+
 @NullMarked
 public final class LanternaRuntime implements TerminalRuntime {
+    private static final int DEFAULT_X = 0;
+    private static final int DEFAULT_Y = 0;
+
     private final Terminal terminal;
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
-    public LanternaRuntime() {
+    public LanternaRuntime(TerminalConfig config) throws IOException {
+        if (config.sizeOverride()) {
+            throw new UnsupportedOperationException("Lanterna does not support size override");
+        }
+
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
-        Pipeline pipeline = new ImmediatePipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
+
+        Pipeline pipeline = config.pipelineType() == PipelineType.BUFFERED ?
+                new BufferedPipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
+                new ImmediatePipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
         this.terminal = new Terminal(pipeline, new LanternaInputSource(lanternaTerminal));
+    }
 
-        lanternaTerminal.setCursorVisible(false);
-        lanternaTerminal.enterPrivateMode();
+    private void start() {
+        try {
+            lanternaTerminal.enterPrivateMode();
+            lanternaTerminal.setCursorVisible(false);
+        }
+        catch (IOException ignored) {}
     }
 
     @Override
@@ -29,17 +49,30 @@ public final class LanternaRuntime implements TerminalRuntime {
 
     @Override
     public void close() {
-        lanternaTerminal.exitPrivateMode();
-        lanternaTerminal.close();
+        try {
+            lanternaTerminal.exitPrivateMode();
+            lanternaTerminal.close();
+        }
+        catch (IOException ignored) {}
     }
 
     @Override
     public int xSize() {
-        return lanternaTerminal.getTerminalSize().getColumns();
+        try {
+            return lanternaTerminal.getTerminalSize().getColumns();
+        }
+        catch (IOException ignored) {
+            return DEFAULT_X;
+        }
     }
 
     @Override
     public int ySize() {
-        return lanternaTerminal.getTerminalSize().getRows();
+        try {
+            return lanternaTerminal.getTerminalSize().getRows();
+        }
+        catch (IOException ignored) {
+            return DEFAULT_Y;
+        }
     }
 }

@@ -20,9 +20,7 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final int ySize;
 
     public MockRuntime(TerminalConfig config) {
-        PipelineType pipelineType = config.pipelineType();
-
-        Pipeline pipeline = pipelineType == PipelineType.BUFFERED ?
+        Pipeline pipeline = config.pipelineType() == PipelineType.BUFFERED ?
             new BufferedPipeline(new MockBackend()) :
             new ImmediatePipeline(new MockBackend());
 
