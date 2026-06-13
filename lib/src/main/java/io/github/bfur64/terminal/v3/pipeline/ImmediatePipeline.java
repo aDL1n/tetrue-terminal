@@ -15,7 +15,7 @@ public class ImmediatePipeline implements Pipeline {
     }
 
     @Override
-    public void execute(List<Command> commands) {
+    public void execute(List<Command> commands, int xSize, int ySize) {
         for (Command command : commands) {
             rendererBackend.execute(command);
         }

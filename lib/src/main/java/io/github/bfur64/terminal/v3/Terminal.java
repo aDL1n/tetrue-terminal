@@ -3,6 +3,7 @@ package io.github.bfur64.terminal.v3;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.v3.commands.*;
 import io.github.bfur64.terminal.v3.interfaces.InputSource;
+import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.pipeline.Pipeline;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -13,12 +14,14 @@ import java.util.List;
 
 @NullMarked
 public final class Terminal {
+    private final TerminalEnvironment environment;
     private final Pipeline pipeline;
     private final InputSource inputSource;
 
     private final List<Command> buffer = new ArrayList<>();
 
-    public Terminal(Pipeline pipeline, InputSource inputSource) {
+    public Terminal(TerminalEnvironment environment, Pipeline pipeline, InputSource inputSource) {
+        this.environment = environment;
         this.pipeline = pipeline;
         this.inputSource = inputSource;
     }
@@ -60,12 +63,24 @@ public final class Terminal {
     }
 
     public void flush() {
-        pipeline.execute(buffer);
+        pipeline.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 
     public void reset() {
         buffer.add(new Reset());
+    }
+
+    public int xSize() {
+        return environment.xSize();
+    }
+
+    public int ySize() {
+        return environment.ySize();
+    }
+
+    public String terminalInfo() {
+        return environment.terminalInfo();
     }
 
     public List<Command> snapshotBuffer() {

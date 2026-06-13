@@ -7,5 +7,5 @@ import java.util.List;
 
 @NullMarked
 public interface Pipeline {
-    void execute(List<Command> commands);
+    void execute(List<Command> commands, int xSize, int ySize);
 }

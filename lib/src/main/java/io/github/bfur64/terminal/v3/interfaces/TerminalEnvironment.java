@@ -6,4 +6,5 @@ import org.jspecify.annotations.NullMarked;
 public interface TerminalEnvironment {
     int xSize();
     int ySize();
+    String terminalInfo();
 }

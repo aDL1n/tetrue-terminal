@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.v3.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.v3.PipelineType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
@@ -31,7 +32,7 @@ public final class LanternaRuntime implements TerminalRuntime {
                 new BufferedPipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
                 new ImmediatePipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
-        this.terminal = new Terminal(pipeline, new LanternaInputSource(lanternaTerminal));
+        this.terminal = new Terminal(this, pipeline, new LanternaInputSource(lanternaTerminal));
     }
 
     private void start() {
@@ -74,5 +75,10 @@ public final class LanternaRuntime implements TerminalRuntime {
         catch (IOException ignored) {
             return DEFAULT_Y;
         }
+    }
+
+    @Override
+    public String terminalInfo() {
+        return "Lanterna: " + Config.lanternaVersion;
     }
 }

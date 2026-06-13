@@ -24,7 +24,7 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
             new BufferedPipeline(new MockBackend()) :
             new ImmediatePipeline(new MockBackend());
 
-        this.terminal = new Terminal(pipeline, new MockInputSource());
+        this.terminal = new Terminal(this, pipeline, new MockInputSource());
 
         int xSize = DEFAULT_X;
         int ySize = DEFAULT_Y;
@@ -54,5 +54,10 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     @Override
     public int ySize() {
         return ySize;
+    }
+
+    @Override
+    public String terminalInfo() {
+        return "Mock Terminal";
     }
 }
