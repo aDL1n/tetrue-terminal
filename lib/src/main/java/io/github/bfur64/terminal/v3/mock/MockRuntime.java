@@ -1,18 +1,40 @@
 package io.github.bfur64.terminal.v3.mock;
 
+import io.github.bfur64.terminal.v3.PipelineType;
 import io.github.bfur64.terminal.v3.Terminal;
+import io.github.bfur64.terminal.v3.TerminalConfig;
+import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
 import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
 import io.github.bfur64.terminal.v3.pipeline.Pipeline;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public final class MockRuntime implements TerminalRuntime {
+public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final Terminal terminal;
+    private final int xSize;
+    private final int ySize;
 
-    public MockRuntime() {
-        Pipeline pipeline = new ImmediatePipeline(new MockBackend());
+    public MockRuntime(TerminalConfig config) {
+        PipelineType pipelineType = config.pipelineType();
+
+        Pipeline pipeline = pipelineType == PipelineType.BUFFERED ?
+            new BufferedPipeline(new MockBackend()) :
+            new ImmediatePipeline(new MockBackend());
+
         this.terminal = new Terminal(pipeline, new MockInputSource());
+
+        int xSize = 0;
+        int ySize = 0;
+
+        if (config.sizeOverride()) {
+            xSize = config.xSize();
+            ySize = config.ySize();
+        }
+
+        this.xSize = xSize;
+        this.ySize = ySize;
     }
 
     @Override
@@ -25,11 +47,11 @@ public final class MockRuntime implements TerminalRuntime {
 
     @Override
     public int xSize() {
-        return 0;
+        return xSize;
     }
 
     @Override
     public int ySize() {
-        return 0;
+        return ySize;
     }
 }
