@@ -12,6 +12,9 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
+    private static final int DEFAULT_X = 0;
+    private static final int DEFAULT_Y = 0;
+
     private final Terminal terminal;
     private final int xSize;
     private final int ySize;
@@ -25,8 +28,8 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
 
         this.terminal = new Terminal(pipeline, new MockInputSource());
 
-        int xSize = 0;
-        int ySize = 0;
+        int xSize = DEFAULT_X;
+        int ySize = DEFAULT_Y;
 
         if (config.sizeOverride()) {
             xSize = config.xSize();
