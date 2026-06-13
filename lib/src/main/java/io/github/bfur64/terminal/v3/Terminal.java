@@ -34,12 +34,20 @@ public final class Terminal {
         return inputSource.poll();
     }
 
+    public void setFg(TextColor color) {
+        setFg(color.color());
+    }
+
     public void setFg(Color color) {
         setFg(color.r(), color.g(), color.b());
     }
 
     public void setFg(int r, int g, int b) {
         buffer.add(new SetFg(r, g, b));
+    }
+
+    public void setBg(TextColor color) {
+        setBg(color.color());
     }
 
     public void setBg(Color color) {
