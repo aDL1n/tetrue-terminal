@@ -108,7 +108,7 @@ public final class Terminal {
     }
 
     @NullMarked
-    private static class Builder {
+    public static class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
         private RenderType renderType = RenderType.IMMEDIATE;
         private int xSize;
