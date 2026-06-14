@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.v3;
+package io.github.bfur64.terminal.v3.output;
 
 import org.jspecify.annotations.NullMarked;
 

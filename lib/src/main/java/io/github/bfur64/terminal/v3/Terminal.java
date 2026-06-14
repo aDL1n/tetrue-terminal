@@ -2,6 +2,8 @@ package io.github.bfur64.terminal.v3;
 
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.v3.commands.*;
+import io.github.bfur64.terminal.v3.output.Color;
+import io.github.bfur64.terminal.v3.output.TextColor;
 import io.github.bfur64.terminal.v3.interfaces.InputSource;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.pipeline.RenderMode;
