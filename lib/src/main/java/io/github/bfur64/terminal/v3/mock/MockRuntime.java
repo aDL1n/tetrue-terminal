@@ -11,30 +11,16 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
-    private static final int DEFAULT_X = 0;
-    private static final int DEFAULT_Y = 0;
-
     private final Terminal terminal;
-    private final int xSize;
-    private final int ySize;
+    private int xSize;
+    private int ySize;
 
-    public MockRuntime(RenderType renderType, int xSize, int ySize, boolean sizeOverride) {
+    public MockRuntime(RenderType renderType) {
         RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
             new BufferedMode(new MockBackend()) :
             new ImmediateMode(new MockBackend());
 
         this.terminal = new Terminal(this, renderStrategy, new MockInputSource());
-
-        int localXSize = DEFAULT_X;
-        int localYSize = DEFAULT_Y;
-
-        if (sizeOverride) {
-            localXSize = xSize;
-            localYSize = ySize;
-        }
-
-        this.xSize = localXSize;
-        this.ySize = localYSize;
     }
 
     @Override

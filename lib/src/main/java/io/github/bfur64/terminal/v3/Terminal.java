@@ -123,9 +123,6 @@ public final class Terminal {
     public static class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
         private RenderType renderType = RenderType.IMMEDIATE;
-        private int xSize;
-        private int ySize;
-        private boolean sizeOverride;
 
         public Builder auto() {
             if (isTermux()) {
@@ -169,22 +166,11 @@ public final class Terminal {
             return this;
         }
 
-        public Builder size(int xSize, int ySize) {
-            this.xSize = xSize;
-            this.ySize = ySize;
-            this.sizeOverride = true;
-            return this;
-        }
-
         public TerminalRuntime build() throws IOException {
-            if (!runtimeType.equals(RuntimeType.MOCK) && sizeOverride) {
-                throw new IllegalArgumentException("Size override supported only by mock terminals");
-            }
-
             return switch (runtimeType) {
                 case JLINE -> new JLineRuntime(renderType);
                 case LANTERNA -> new LanternaRuntime(renderType);
-                case MOCK -> new MockRuntime(renderType, xSize, ySize, sizeOverride);
+                case MOCK -> new MockRuntime(renderType);
             };
         }
     }
