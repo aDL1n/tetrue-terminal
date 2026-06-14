@@ -6,20 +6,32 @@ import io.github.bfur64.terminal.v3.lanterna.LanternaRuntime;
 import io.github.bfur64.terminal.v3.mock.MockRuntime;
 import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
 @NullMarked
 public class TerminalBuilder {
-    private @Nullable RuntimeType runtimeType;
-    private @Nullable RenderType renderType;
+    private RuntimeType runtimeType = RuntimeType.JLINE;
+    private RenderType renderType = RenderType.IMMEDIATE;
     private int xSize;
     private int ySize;
     private boolean sizeOverride;
 
     public TerminalBuilder auto() {
-        return jline();
+        if (isTermux()) {
+            return lanterna();
+        }
+        else {
+            return jline();
+        }
+    }
+
+    private static boolean isTermux() {
+        String prefix = System.getenv("PREFIX");
+
+        return (prefix != null &&
+                prefix.contains("termux")) ||
+                System.getenv("TERMUX_VERSION") != null;
     }
 
     public TerminalBuilder jline() {
@@ -55,14 +67,6 @@ public class TerminalBuilder {
     }
 
     public TerminalRuntime build() throws IOException {
-        if (runtimeType == null) {
-            throw new IllegalArgumentException("Runtime type must be either: auto(), jline(), lanterna(), or mock()");
-        }
-
-        if (renderType == null) {
-            throw new IllegalArgumentException("Pipeline type must be either: immediate(), or buffered()");
-        }
-
         TerminalConfig config = new TerminalConfig(renderType, xSize, ySize, sizeOverride);
 
         return switch (runtimeType) {
