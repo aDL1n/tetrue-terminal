@@ -1,5 +1,6 @@
 package io.github.bfur64.terminal.v3;
 
+import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.v3.commands.*;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
@@ -82,6 +83,11 @@ public final class Terminal {
         buffer.add(new Clear());
     }
 
+    public void flush(List<Command> externalBuffer) {
+        renderStrategy.execute(externalBuffer, environment.xSize(), environment.ySize());
+        buffer.clear();
+    }
+
     public void flush() {
         renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
@@ -97,6 +103,10 @@ public final class Terminal {
 
     public int ySize() {
         return environment.ySize();
+    }
+
+    public String libraryInfo() {
+        return Config.tetrueTerminalVersion;
     }
 
     public String terminalInfo() {
