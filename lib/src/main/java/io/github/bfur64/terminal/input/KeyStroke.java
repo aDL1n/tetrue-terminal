@@ -14,17 +14,6 @@ public record KeyStroke(KeyType keyType, @Nullable Character character) {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof KeyStroke(KeyType otherType, Character otherChar))) return false;
-        if (this.keyType != otherType) return false;
-        if (this.keyType == KeyType.CHARACTER) {
-            return this.character == otherChar;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
         return switch (keyType) {
             case CHARACTER -> {
