@@ -165,8 +165,6 @@ public final class Terminal {
         }
 
         public TerminalRuntime build() throws IOException {
-            TerminalConfig config = new TerminalConfig(renderType, xSize, ySize, sizeOverride);
-
             return switch (runtimeType) {
                 case JLINE -> new JLineRuntime(config);
                 case LANTERNA -> new LanternaRuntime(config);
