@@ -7,7 +7,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public class BufferedMode implements RenderMode {
+public class BufferedMode implements RenderStrategy {
     private final RendererBackend rendererBackend;
 
     public BufferedMode(RendererBackend rendererBackend) {

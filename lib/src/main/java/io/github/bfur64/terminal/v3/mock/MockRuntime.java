@@ -7,7 +7,7 @@ import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
 import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
-import io.github.bfur64.terminal.v3.pipeline.RenderMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -20,11 +20,11 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final int ySize;
 
     public MockRuntime(TerminalConfig config) {
-        RenderMode pipeline = config.renderType() == RenderType.BUFFERED ?
+        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
             new BufferedMode(new MockBackend()) :
             new ImmediateMode(new MockBackend());
 
-        this.terminal = new Terminal(this, pipeline, new MockInputSource());
+        this.terminal = new Terminal(this, renderStrategy, new MockInputSource());
 
         int xSize = DEFAULT_X;
         int ySize = DEFAULT_Y;

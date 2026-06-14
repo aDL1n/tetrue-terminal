@@ -10,7 +10,7 @@ import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
 import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
-import io.github.bfur64.terminal.v3.pipeline.RenderMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderStrategy;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
@@ -40,14 +40,14 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
         this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
-        RenderMode renderMode = config.renderType() == RenderType.BUFFERED ?
+        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
             new BufferedMode(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
             new ImmediateMode(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
 
         BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
-        this.terminal = new Terminal(this, renderMode, new JLineInputSource(inputQueue));
+        this.terminal = new Terminal(this, renderStrategy, new JLineInputSource(inputQueue));
 
         start();
     }

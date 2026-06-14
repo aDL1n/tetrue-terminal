@@ -6,7 +6,7 @@ import io.github.bfur64.terminal.v3.output.Color;
 import io.github.bfur64.terminal.v3.output.TextColor;
 import io.github.bfur64.terminal.v3.interfaces.InputSource;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
-import io.github.bfur64.terminal.v3.pipeline.RenderMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -17,14 +17,14 @@ import java.util.List;
 @NullMarked
 public final class Terminal {
     private final TerminalEnvironment environment;
-    private final RenderMode renderMode;
+    private final RenderStrategy renderStrategy;
     private final InputSource inputSource;
 
     private final List<Command> buffer = new ArrayList<>();
 
-    public Terminal(TerminalEnvironment environment, RenderMode renderMode, InputSource inputSource) {
+    public Terminal(TerminalEnvironment environment, RenderStrategy renderStrategy, InputSource inputSource) {
         this.environment = environment;
-        this.renderMode = renderMode;
+        this.renderStrategy = renderStrategy;
         this.inputSource = inputSource;
     }
 
@@ -77,7 +77,7 @@ public final class Terminal {
     }
 
     public void flush() {
-        renderMode.execute(buffer, environment.xSize(), environment.ySize());
+        renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 

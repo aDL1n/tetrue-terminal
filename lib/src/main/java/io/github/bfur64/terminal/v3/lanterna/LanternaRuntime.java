@@ -9,7 +9,7 @@ import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
 import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
-import io.github.bfur64.terminal.v3.pipeline.RenderMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
@@ -29,11 +29,11 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
 
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
 
-        RenderMode renderMode = config.renderType() == RenderType.BUFFERED ?
+        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
                 new BufferedMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
                 new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
-        this.terminal = new Terminal(this, renderMode, new LanternaInputSource(lanternaTerminal));
+        this.terminal = new Terminal(this, renderStrategy, new LanternaInputSource(lanternaTerminal));
     }
 
     private void start() {
