@@ -1,5 +1,6 @@
 package io.github.bfur64.terminal.v3.jline;
 
+import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.v3.PipelineType;
@@ -13,6 +14,7 @@ import io.github.bfur64.terminal.v3.pipeline.Pipeline;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.InfoCmp;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOError;
@@ -46,6 +48,15 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
         this.terminal = new Terminal(this, pipeline, new JLineInputSource(inputQueue));
+
+        start();
+    }
+
+    private void start() {
+        jlineTerminal.enterRawMode();
+        jlineTerminal.puts(InfoCmp.Capability.cursor_invisible);
+        jlineTerminal.puts(InfoCmp.Capability.enter_ca_mode);
+        jlineTerminal.flush();
     }
 
     private Thread startPollingThread(BlockingQueue<KeyStroke> inputQueue, BindingReader bindingReader, KeyMap<KeyStroke> keyMap) {
@@ -84,14 +95,20 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     @Override
     public String terminalInfo() {
-        return "";
+        return "JLine: " + Config.jlineVersion;
     }
 
     @Override
-    public void close() throws InterruptedException {
+    public void close() throws InterruptedException, IOException {
         isRunning.set(false);
         pollingThread.interrupt();
         pollingThread.join();
+
+        jlineTerminal.puts(InfoCmp.Capability.cursor_visible);
+        jlineTerminal.puts(InfoCmp.Capability.exit_ca_mode);
+        jlineTerminal.flush();
+
+        jlineTerminal.close();
     }
 
     private KeyMap<KeyStroke> buildKeyMap() {
