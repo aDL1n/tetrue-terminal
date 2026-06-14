@@ -84,8 +84,10 @@ public final class Terminal {
     }
 
     public void flush(List<Command> externalBuffer) {
-        buffer.add(new Flush());
-        renderStrategy.execute(externalBuffer, environment.xSize(), environment.ySize());
+        List<Command> localBuffer = new ArrayList<>(externalBuffer);
+        localBuffer.add(new Flush());
+        
+        renderStrategy.execute(localBuffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 
