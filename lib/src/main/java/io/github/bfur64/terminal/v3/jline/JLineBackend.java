@@ -39,7 +39,7 @@ public final class JLineBackend implements RendererBackend {
     }
 
     private void put(Put put) {
-        terminal.puts(Capability.cursor_address, put.x(), put.y());
+        terminal.puts(Capability.cursor_address, put.y(), put.x());
         printWriter.print(put.text());
     }
 
