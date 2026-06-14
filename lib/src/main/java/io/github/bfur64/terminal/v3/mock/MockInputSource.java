@@ -6,15 +6,43 @@ import io.github.bfur64.terminal.v3.interfaces.InputSource;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 @NullMarked
 public final class MockInputSource implements InputSource {
+    private final List<@Nullable KeyStroke> keyStrokes = new LinkedList<>();
+
     @Override
     public KeyStroke read() {
-        return new KeyStroke(KeyType.UNKNOWN);
+        if (keyStrokes.isEmpty()) {
+            return new KeyStroke(KeyType.UNKNOWN);
+        }
+
+        KeyStroke keyStroke = keyStrokes.getFirst();
+        keyStrokes.removeFirst();
+
+        return keyStroke != null ? keyStroke : new KeyStroke(KeyType.UNKNOWN);
     }
 
     @Override
     public @Nullable KeyStroke poll() {
-        return null;
+        if (keyStrokes.isEmpty()) {
+            return null;
+        }
+
+        KeyStroke keyStroke = keyStrokes.getFirst();
+        keyStrokes.removeFirst();
+
+        return keyStroke;
+    }
+
+    void addKeyStroke(@Nullable KeyStroke keyStroke) {
+        keyStrokes.add(keyStroke);
+    }
+
+    void addKeyStrokes(List<@Nullable KeyStroke> keyStrokes) {
+        this.keyStrokes.addAll(new ArrayList<>(keyStrokes));
     }
 }

@@ -1,5 +1,6 @@
 package io.github.bfur64.terminal.v3.mock;
 
+import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
@@ -8,10 +9,14 @@ import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
 import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
 import io.github.bfur64.terminal.v3.pipeline.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 @NullMarked
 public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final Terminal terminal;
+    private final MockInputSource mockInputSource;
     private int xSize;
     private int ySize;
 
@@ -20,7 +25,9 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
             new BufferedMode(new MockBackend()) :
             new ImmediateMode(new MockBackend());
 
-        this.terminal = new Terminal(this, renderStrategy, new MockInputSource());
+        this.mockInputSource = new MockInputSource();
+
+        this.terminal = new Terminal(this, renderStrategy, this.mockInputSource);
     }
 
     @Override
@@ -44,5 +51,21 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     @Override
     public String terminalInfo() {
         return "Mock Terminal";
+    }
+
+    public void setXSize(int xSize) {
+        this.xSize = xSize;
+    }
+
+    public void setYSize(int ySize) {
+        this.ySize = ySize;
+    }
+
+    public void addKeyStroke(@Nullable KeyStroke keyStroke) {
+        mockInputSource.addKeyStroke(keyStroke);
+    }
+
+    public void addKeyStrokes(List<@Nullable KeyStroke> keyStrokes) {
+        mockInputSource.addKeyStrokes(keyStrokes);
     }
 }
