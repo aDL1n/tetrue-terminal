@@ -15,7 +15,7 @@ public final class ImmediateMode implements RenderStrategy {
     }
 
     @Override
-    public void execute(List<Command> commands, int xSize, int ySize) {
+    public void execute(List<Command> commands, int termXSize, int termYSize) {
         for (Command command : commands) {
             rendererBackend.execute(command);
         }

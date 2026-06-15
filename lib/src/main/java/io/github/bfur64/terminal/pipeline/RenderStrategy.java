@@ -7,5 +7,5 @@ import java.util.List;
 
 @NullMarked
 public interface RenderStrategy {
-    void execute(List<Command> commands, int xSize, int ySize);
+    void execute(List<Command> commands, int termXSize, int termYSize);
 }
