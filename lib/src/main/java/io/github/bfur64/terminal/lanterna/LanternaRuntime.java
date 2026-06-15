@@ -29,6 +29,7 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
                 new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
         this.terminal = new Terminal(this, renderStrategy, new LanternaInputSource(lanternaTerminal));
+        start();
     }
 
     private void start() {
