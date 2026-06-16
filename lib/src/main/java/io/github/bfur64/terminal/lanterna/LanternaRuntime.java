@@ -9,12 +9,19 @@ import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.pipeline.BufferedMode;
 import io.github.bfur64.terminal.pipeline.ImmediateMode;
 import io.github.bfur64.terminal.pipeline.RenderStrategy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
 
 @NullMarked
 public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironment {
+    private static final Logger logger = LogManager.getLogger(LanternaRuntime.class);
+
+    private boolean xSizeWarningIssued;
+    private boolean ySizeWarningIssued;
+
     private static final int DEFAULT_X = 0;
     private static final int DEFAULT_Y = 0;
 
@@ -29,15 +36,13 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
                 new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
         this.terminal = new Terminal(this, renderStrategy, new LanternaInputSource(lanternaTerminal));
+
         start();
     }
 
-    private void start() {
-        try {
-            lanternaTerminal.enterPrivateMode();
-            lanternaTerminal.setCursorVisible(false);
-        }
-        catch (IOException ignored) {}
+    private void start() throws IOException {
+        lanternaTerminal.enterPrivateMode();
+        lanternaTerminal.setCursorVisible(false);
     }
 
     @Override
@@ -51,7 +56,9 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
             lanternaTerminal.exitPrivateMode();
             lanternaTerminal.close();
         }
-        catch (IOException ignored) {}
+        catch (IOException e) {
+            logger.error("Failed to close Lanterna runtime", e);
+        }
     }
 
     @Override
@@ -59,7 +66,11 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
         try {
             return lanternaTerminal.getTerminalSize().getColumns();
         }
-        catch (IOException ignored) {
+        catch (IOException e) {
+            if (!xSizeWarningIssued) {
+                xSizeWarningIssued = true;
+                logger.warn("Could not get `xSize()`, defaulting to {}", DEFAULT_X, e);
+            }
             return DEFAULT_X;
         }
     }
@@ -69,7 +80,11 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
         try {
             return lanternaTerminal.getTerminalSize().getRows();
         }
-        catch (IOException ignored) {
+        catch (IOException e) {
+            if (!ySizeWarningIssued) {
+                ySizeWarningIssued = true;
+                logger.warn("Could not get `ySize()`, defaulting to {}", DEFAULT_Y, e);
+            }
             return DEFAULT_Y;
         }
     }

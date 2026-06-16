@@ -5,6 +5,8 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.output.SGR;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
 
 import com.googlecode.lanterna.terminal.Terminal;
@@ -13,6 +15,9 @@ import java.io.IOException;
 
 @NullMarked
 public final class LanternaBackend implements RendererBackend {
+    private static final Logger logger = LogManager.getLogger(LanternaBackend.class);
+    private boolean terminalFailed;
+
     private final Terminal terminal;
     private final TextGraphics textGraphics;
 
@@ -35,7 +40,12 @@ public final class LanternaBackend implements RendererBackend {
                 case SetFg setFg -> textGraphics.setForegroundColor(new TextColor.RGB(setFg.r(), setFg.g(), setFg.b()));
             }
         }
-        catch (IOException ignored) {}
+        catch (IOException e) {
+            if (!terminalFailed) {
+                terminalFailed = true;
+                logger.error("Lanterna backend failed", e);
+            }
+        }
     }
 
     private com.googlecode.lanterna.SGR convertSGR(SGR SGR) {

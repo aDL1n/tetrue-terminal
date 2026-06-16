@@ -13,6 +13,8 @@ import io.github.bfur64.terminal.interfaces.InputSource;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.pipeline.RenderStrategy;
 import io.github.bfur64.terminal.pipeline.RenderType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -24,6 +26,8 @@ import java.util.List;
 
 @NullMarked
 public final class Terminal {
+    private static final Logger logger = LogManager.getLogger(Terminal.class);
+
     private final TerminalEnvironment environment;
     private final RenderStrategy renderStrategy;
     private final InputSource inputSource;
@@ -206,11 +210,15 @@ public final class Terminal {
         }
 
         public TerminalRuntime build() throws IOException {
-            return switch (runtimeType) {
+            TerminalRuntime terminalRuntime = switch (runtimeType) {
                 case JLINE -> new JLineRuntime(renderType);
                 case LANTERNA -> new LanternaRuntime(renderType);
                 case MOCK -> new MockRuntime(renderType);
             };
+
+            logger.info("Initialized {} runtime with {} strategy", runtimeType, renderType);
+
+            return  terminalRuntime;
         }
     }
 }
