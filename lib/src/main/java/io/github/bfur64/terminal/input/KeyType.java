@@ -1,5 +1,8 @@
 package io.github.bfur64.terminal.input;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public enum KeyType {
     CHARACTER,
     ESCAPE,
