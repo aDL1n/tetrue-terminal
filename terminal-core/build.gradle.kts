@@ -11,30 +11,22 @@ version = "3.0.0-SNAPSHOT"
 val lanternaVersion = project.properties["lanternaVersion"] as String
 val jlineVersion = project.properties["jlineVersion"] as String
 
-tasks.processResources {
-    val tetrueTerminalVersion = project.version.toString()
-    val lanternaVersion = lanternaVersion
-    val jlineVersion = jlineVersion
-
-    inputs.property("tetrueTerminalVersion", tetrueTerminalVersion)
-    inputs.property("jlineVersion", jlineVersion)
-
-    filesMatching("io/github/bfur64/terminal/settings.json.template") {
-        expand(
-            "tetrueTerminalVersion" to tetrueTerminalVersion,
-            "lanternaVersion" to lanternaVersion,
-            "jlineVersion" to jlineVersion
-        )
-    }
-
-    rename("(.+)\\.template", "$1")
-}
-
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
 
     id("com.vanniktech.maven.publish") version "0.36.0"
+    id("com.github.gmazzo.buildconfig") version "6.0.10"
+}
+
+buildConfig {
+    className("Versions")
+    packageName(group.toString())
+    useJavaOutput()
+
+    buildConfigField("String", "TETRUE_TERMINAL", "\"${project.version}\"")
+    buildConfigField("String", "LANTERNA", "\"${lanternaVersion}\"")
+    buildConfigField("String", "JLINE", "\"${jlineVersion}\"")
 }
 
 repositories {
@@ -50,9 +42,6 @@ dependencies {
     // Rendering Pipeline
     implementation("com.googlecode.lanterna:lanterna:${lanternaVersion}")
     implementation("org.jline:jline:$jlineVersion")
-
-    // JSON Reader
-    implementation("tools.jackson.core:jackson-databind:3.1.3")
 
     // Logger
     implementation("org.apache.logging.log4j:log4j-api:2.26.0")

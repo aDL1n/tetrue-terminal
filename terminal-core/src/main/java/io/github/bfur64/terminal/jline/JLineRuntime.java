@@ -1,6 +1,6 @@
 package io.github.bfur64.terminal.jline;
 
-import io.github.bfur64.terminal.Config;
+import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.render.RenderType;
@@ -90,7 +90,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     @Override
     public String terminalInfo() {
-        return "JLine: " + Config.jlineVersion;
+        return "JLine: " + Versions.JLINE;
     }
 
     @Override

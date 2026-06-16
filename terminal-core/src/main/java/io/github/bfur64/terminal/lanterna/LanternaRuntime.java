@@ -1,7 +1,7 @@
 package io.github.bfur64.terminal.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import io.github.bfur64.terminal.Config;
+import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.render.RenderType;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
@@ -91,6 +91,6 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
 
     @Override
     public String terminalInfo() {
-        return "Lanterna: " + Config.lanternaVersion;
+        return "Lanterna: " + Versions.LANTERNA;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.bfur64.terminal;
 
+import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
@@ -139,7 +140,7 @@ public final class Terminal {
     }
 
     public String libraryInfo() {
-        return Config.tetrueTerminalVersion;
+        return Versions.TETRUE_TERMINAL;
     }
 
     public String terminalInfo() {
