@@ -27,8 +27,8 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
     terminal.flush();
 
     KeyStroke keyStroke = terminal.read();
-    if (keyStroke == KeyType.CHARACTER && keyStroke.character() == 't') {
-        terminal.put(0, 1, "You pressed `t`!";
+    if (keyStroke.keyType() == KeyType.CHARACTER && keyStroke.character() == 't') {
+        terminal.put(0, 1, "You pressed `t`!");
     }
     terminal.flush();
 
