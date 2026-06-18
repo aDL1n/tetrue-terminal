@@ -20,11 +20,13 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
     terminal.onSGR(SGR.BOLD, SGR.UNDERLINE);
     terminal.put(0, 0, "Hello World!");
     terminal.reset();
+    terminal.flush();
 
     KeyStroke keyStroke = terminal.read();
     if (keyStroke == KeyType.CHARACTER && keyStroke.character() == 't') {
         terminal.put(0, 1, "You pressed `t`!";
     }
+    terminal.flush();
 
     terminal.read();
 }
@@ -73,9 +75,12 @@ terminal.poll();
 
 Write text or individual characters at a specific x and y terminal position
 
+Any `Terminal` commands require `flush()` to output any changes to the terminal
+
 ```java
 terminal.put(0, 0, "Hello World!");
 terminal.put(0, 1, 'a');
+terminal.flush();
 ```
 
 ### Colors and Styling
@@ -86,6 +91,7 @@ Apply styling attributes to output
 terminal.onSGR(SGR.BOLD);
 terminal.put(0, 0, "Hello World!");
 terminal.offSGR(SGR.BOLD);
+terminal.flush();
 ```
 
 Multiple styles can be enabled at once
@@ -94,6 +100,7 @@ Multiple styles can be enabled at once
 terminal.onSGR(SGR.UNDERLINE, SGR.BOLD);
 terminal.put(0, 0, "Hello World!");
 terminal.offSGR(SGR.UNDERLINE, SGR.BOLD);
+terminal.flush();
 ```
 
 Opinionated CSS1 coloring via `TextColor`
@@ -102,6 +109,7 @@ Opinionated CSS1 coloring via `TextColor`
 terminal.setBg(TextColor.MAROON);
 terminal.put(0, 0, "Hello World!");
 terminal.reset();
+terminal.flush();
 ```
 
 Manual RGB coloring
@@ -110,6 +118,7 @@ Manual RGB coloring
 terminal.setBg(255, 0, 0);
 terminal.put(0, 0, "Hello World!");
 terminal.reset();
+terminal.flush();
 ```
 
 ### Managing Terminal State
@@ -126,6 +135,7 @@ terminal.onSGR(SGR.UNDERLINE);
 terminal.put(0, 0, "Hello World!");
 
 terminal.reset();
+terminal.flush();
 ```
 
 ### Runtime Lifecycle
@@ -139,6 +149,7 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
     Terminal terminal = runtime.terminal();
 
     terminal.put(0, 0, "Hello World!");
+    terminal.flush();
 }
 
 ```
