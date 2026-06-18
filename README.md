@@ -188,7 +188,7 @@ This allows applications to switch terminal frameworks without modifying applica
 ## Requirements
 
 - Java 21 or higher
-- Relatively modern terminals (Windows Terminal)
+- Relatively modern terminals
 
 ### Tested Terminals
 
