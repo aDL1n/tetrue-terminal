@@ -73,8 +73,27 @@ implementation("io.github.bfur64:tetrue-terminal:x.x.x")
 
 Reads a single key press from the terminal. This method blocks until input is available
 
+It returns a `KeyStroke`, which represents a key that is pressed.
+
+A `KeyStroke` can be printed with user friendly formatting via the `toString()` method call
+
+It stores two fields:
+- KeyType - The type of key pressed, including special keys
+- @Nullable Character - If the `KeyType` is `CHARACTER`, the `char` field will be populated
+
 ```java
-terminal.read();
+KeyStroke keyStroke = terminal.read();
+
+if (keyStroke.keyType() == KeyType.ESCAPE) {
+    terminal.put(0, 0, "You pressed " + keyStroke.keyType().toString()); // Prints the formatted `KeyType`
+}
+else if (keyStroke.keyType() == KeyType.CHARACTER) { // Checks if the type of key is a character
+    if (keyStroke.character() == 'q') { // Prints the character key
+        terminal.put(0, 0, "You pressed q");
+    }
+}
+
+terminal.flush();
 ```
 
 #### Polling
@@ -82,7 +101,47 @@ terminal.read();
 Poll for input without blocking. Returns `null` if no input is available
 
 ```java
-terminal.poll();
+while (true) {
+    KeyStroke keyStroke = terminal.poll();
+
+    // Check if `keyStroke` is null first
+    if (keyStroke == null) continue;
+
+    if (keyStroke.keyType() == KeyType.ESCAPE) break;
+}
+```
+
+It is recommended to use a refresh-capped while loop to prevent CPU waste, like `LockSupport`
+
+```java
+while (true) {
+    long frameStart = System.nanoTime(); // Used for frame timing
+
+    KeyStroke keyStroke = terminal.poll();
+
+    String out = keyStroke == null
+        ? "None"
+        : keyStroke.toString();
+
+    // Basic pattern for breaking out with polling
+    if (keyStroke != null && keyStroke.keyType() == KeyType.ESCAPE) {
+        break;
+    }
+
+    // Print the pressed key
+    terminal.clear();
+    terminal.put(0, 0, "You pressed: " + out);
+    terminal.flush();
+
+    // Lock the refresh at 60fps
+    long deadline = frameStart + 1_000_000_000L / 60; // nsPerFrame
+    long now = System.nanoTime();
+
+    while (now < deadline) {
+        LockSupport.parkNanos(deadline - now);
+        now = System.nanoTime();
+    }
+}
 ```
 
 ### Writing Text
