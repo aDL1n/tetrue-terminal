@@ -40,8 +40,20 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 
 #### Dependencies
 
+Kotlin
+
 ```kotlin
 implementation("io.github.bfur64:tetrue-terminal:x.x.x")
+```
+
+Maven
+
+```maven
+<dependency>
+    <groupId>io.github.bfur64</groupId>
+    <artifactId>tetrue-terminal</artifactId>
+    <version>x.x.x</version>
+</dependency>
 ```
 
 ## Features
