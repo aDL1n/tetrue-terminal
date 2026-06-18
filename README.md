@@ -69,8 +69,6 @@ implementation("io.github.bfur64:tetrue-terminal:x.x.x")
 
 ### Reading Input
 
-#### Reading
-
 Reads a single key press from the terminal. This method blocks until input is available
 
 It returns a `KeyStroke`, which represents a key that is pressed.
@@ -96,7 +94,7 @@ else if (keyStroke.keyType() == KeyType.CHARACTER) { // Checks if the type of ke
 terminal.flush();
 ```
 
-#### Polling
+### Polling Input
 
 Poll for input without blocking. Returns `null` if no input is available
 
