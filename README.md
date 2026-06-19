@@ -275,3 +275,9 @@ Tetrue Terminal separates application code from terminal implementation details
 This originally came from the concern of not being able to support Termux, as JLine3/4 did not work, while Lanterna did, and on Windows, Lanterna was clunky
 
 Thus, this library was born to solve that issue. Since then, it has become opinionated on how a Terminal should work
+
+## Contributing
+
+Development takes place on the `dev` branch
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and pull request workflow
